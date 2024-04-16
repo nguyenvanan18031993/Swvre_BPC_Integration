@@ -56,7 +56,7 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
         try {
           SwrveConfig config = new SwrveConfig();
           // To use the EU stack, include this in your config.
-          // config.setSelectedStack(SwrveStack.EU);
+          config.setSelectedStack(SwrveStack.EU);
           SwrveSDK.createInstance(activity.getApplication(), 7179, "general-PNdXX9jQXcSq5Oz1CMag", config);
           result.success("Connect successfully");
         } catch (IllegalArgumentException exp) {

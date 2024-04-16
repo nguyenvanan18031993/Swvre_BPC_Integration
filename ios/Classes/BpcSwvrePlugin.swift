@@ -16,7 +16,7 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
     case "connectSwvreSDK":
     let config = SwrveConfig()
     // To use the EU stack, include this in your config.
-    // config.stack = SWRVE_STACK_EU
+    config.stack = SWRVE_STACK_EU
       #if DEBUG
           SwrveSDK.sharedInstance(withAppID: 7179,
               apiKey: "general-PNdXX9jQXcSq5Oz1CMag",
