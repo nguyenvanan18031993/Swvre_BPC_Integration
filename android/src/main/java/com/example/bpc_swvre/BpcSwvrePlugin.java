@@ -4,21 +4,15 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+import com.swrve.sdk.SwrveIdentityResponse;
 import com.swrve.sdk.SwrveSDK;
 import com.swrve.sdk.config.SwrveConfig;
-import com.swrve.sdk.config.SwrveEmbeddedMessageConfig;
 import com.swrve.sdk.config.SwrveStack;
 import com.swrve.sdk.messaging.SwrveEmbeddedListener;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.MethodCall;
@@ -41,7 +35,7 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "bpc_swvre");
+    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "com.example.app/bpc_swrve");
     channel.setMethodCallHandler(this);
     context = flutterPluginBinding.getApplicationContext();
   }
@@ -49,83 +43,125 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     switch (call.method) {
-      case "getPlatformVersion":
-        result.success("Android " + Build.VERSION.RELEASE);
+      case "event":
+        swrveEvent(call);
         break;
-      case "connectSwvreSDK":
-        try {
-          SwrveConfig config = new SwrveConfig();
-          // To use the EU stack, include this in your config.
-          config.setSelectedStack(SwrveStack.EU);
-          SwrveSDK.createInstance(activity.getApplication(), 7179, "general-PNdXX9jQXcSq5Oz1CMag", config);
-          result.success("Connect successfully");
-        } catch (IllegalArgumentException exp) {
-          result.success("Could not initialize the Swrve SDK " + exp);
-        }
+      case "userUpdate":
+        swrveUserUpdate(call);
         break;
-      case "embedCampaignSwvreSDK":
-        SwrveEmbeddedListener embeddedListener = (context, message, personalizationProperties, isControl) -> {
-          if (isControl) {
-            // this campaign should not be shown to user, to help with reporting you should
-            // use the api below to send us an impression event
-            SwrveSDK.embeddedControlMessageImpressionEvent(message);
-            result.success("[Swvre DEBUG] embeddedControlMessageImpressionEvent");
-          } else {
-            // returns the message data with personalization resolved. It will be null if it
-            // could not resolve.
-            String resolvedMessageData = SwrveSDK.getPersonalizedEmbeddedMessageData(message,
-                personalizationProperties);
-            // continue with normal logic
-
-            // If you want to track an impression event
-            SwrveSDK.embeddedMessageWasShownToUser(message);
-            result.success("[Swvre DEBUG] embeddedMessageWasShown");
-
-            // The message object returns a list of strings representing the button options.
-            // In this example we are taking out the first button from the list and sending
-            // a click event
-            if (message.getButtons() != null) {
-              if (message.getButtons().size() == 1) {
-                String buttonName = message.getButtons().get(0);
-                SwrveSDK.embeddedMessageButtonWasPressed(message, buttonName);
-                result.success("[Swvre DEBUG] embeddedButtonWasPressed");
-              }
-            }
-            result.success("[Swvre DEBUG] complete");
-          }
-
-        };
+      case "identify":
+        swrveIdentify(call);
         break;
-      case "sendEvent":
-        final String eventName = call.argument("event");
-        final Map<String, String> payload = call.argument("payload");
-        if (eventName != null) {
-          // only send event name
-          if (payload != null) {
-            SwrveSDK.event(eventName, payload);
-            result.success("Event with payload");
-          } else {
-            SwrveSDK.event(eventName);
-            result.success(eventName);
-          }
-        } else {
-          result.success("bad args");
-        }
-        break;
-      case "customeUserProperties":
-        final Map<String, String> args = call.arguments();
-        if (args != null) {
-          SwrveSDK.userUpdate(args);
-          if (SwrveSDK.isStarted()) {
-            result.success(SwrveSDK.getUserId());
-          }
-        } else {
-          result.success("bad args");
-        }
+      case "setSwrveProperties":
+        SwrveSDK.userUpdate(call.argument("properties"));
         break;
       default:
         result.notImplemented();
     }
+    // switch (call.method) {
+    // case "getPlatformVersion":
+    // result.success("Android " + Build.VERSION.RELEASE);
+    // break;
+    // case "connectSwvreSDK":
+    // try {
+    // SwrveConfig config = new SwrveConfig();
+    // // To use the EU stack, include this in your config.
+    // config.setSelectedStack(SwrveStack.EU);
+    // SwrveSDK.createInstance(activity.getApplication(), 7179,
+    // "general-PNdXX9jQXcSq5Oz1CMag", config);
+    // result.success("Connect successfully");
+    // } catch (IllegalArgumentException exp) {
+    // result.success("Could not initialize the Swrve SDK " + exp);
+    // }
+    // break;
+    // case "embedCampaignSwvreSDK":
+    // SwrveEmbeddedListener embeddedListener = (context, message,
+    // personalizationProperties, isControl) -> {
+    // if (isControl) {
+    // // this campaign should not be shown to user, to help with reporting you
+    // should
+    // // use the api below to send us an impression event
+    // SwrveSDK.embeddedControlMessageImpressionEvent(message);
+    // result.success("[Swvre DEBUG] embeddedControlMessageImpressionEvent");
+    // } else {
+    // // returns the message data with personalization resolved. It will be null if
+    // it
+    // // could not resolve.
+    // String resolvedMessageData =
+    // SwrveSDK.getPersonalizedEmbeddedMessageData(message,
+    // personalizationProperties);
+    // // continue with normal logic
+
+    // // If you want to track an impression event
+    // SwrveSDK.embeddedMessageWasShownToUser(message);
+    // result.success("[Swvre DEBUG] embeddedMessageWasShown");
+
+    // // The message object returns a list of strings representing the button
+    // options.
+    // // In this example we are taking out the first button from the list and
+    // sending
+    // // a click event
+    // if (message.getButtons() != null) {
+    // if (message.getButtons().size() == 1) {
+    // String buttonName = message.getButtons().get(0);
+    // SwrveSDK.embeddedMessageButtonWasPressed(message, buttonName);
+    // result.success("[Swvre DEBUG] embeddedButtonWasPressed");
+    // }
+    // }
+    // result.success("[Swvre DEBUG] complete");
+    // }
+
+    // };
+    // break;
+    // case "event":
+    // result.success(call.argument("payload"));
+    // try {
+    // SwrveSDK.event(call.argument("name"), call.argument("payload"));
+    // } catch (IllegalArgumentException exp) {
+    // result.success(exp);
+    // }
+    // break;
+    // case "setSwrveProperties":
+    // SwrveSDK.userUpdate(call.argument("properties"));
+    // break;
+    // case "identify":
+    // SwrveSDK.identify(call.argument("external_id"), new SwrveIdentityResponse() {
+    // @Override
+    // public void onSuccess(String status, String swrveId) {
+    // result.success(swrveId);
+    // }
+
+    // @Override
+    // public void onError(int responseCode, String errorMessage) {
+    // result.success(errorMessage);
+    // }
+    // });
+    // break;
+    // default:
+    // result.notImplemented();
+    // }
+  }
+
+  private void swrveEvent(MethodCall call) {
+    SwrveSDK.event(call.argument("name"), call.argument("payload"));
+  }
+
+  private void swrveUserUpdate(MethodCall call) {
+    SwrveSDK.userUpdate(call.argument("properties"));
+  }
+
+  private void swrveIdentify(MethodCall call) {
+    SwrveSDK.identify(call.argument("external_id"), new SwrveIdentityResponse() {
+      @Override
+      public void onSuccess(String status, String swrveId) {
+        // Success, continue with your logic
+      }
+
+      @Override
+      public void onError(int responseCode, String errorMessage) {
+        // Error should be handled.
+      }
+    });
   }
 
   @Override

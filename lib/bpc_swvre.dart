@@ -1,5 +1,3 @@
-import 'package:bpc_swvre/models/UserModel.dart';
-
 import 'bpc_swvre_platform_interface.dart';
 
 class BpcSwvre {
@@ -15,11 +13,15 @@ class BpcSwvre {
     return BpcSwvrePlatform.instance.embedCampaignSwvreSDK();
   }
 
-  Future<String?> sendEvent(String event, Map<String, dynamic>? payload) {
-    return BpcSwvrePlatform.instance.sendEvent(event, payload);
+  Future<String?> event(String event, Map? payload) {
+    return BpcSwvrePlatform.instance.event(event, payload);
   }
 
-  Future<String?> customeUserProperties(UserModel userModel) {
-    return BpcSwvrePlatform.instance.customeUserProperties(userModel);
+  Future<String?> setSwrveProperties(Map properties) {
+    return BpcSwvrePlatform.instance.setSwrveProperties(properties);
+  }
+
+  Future<String?> identifySwrveUser(String external_id) {
+    return BpcSwvrePlatform.instance.identifySwrveUser(external_id);
   }
 }

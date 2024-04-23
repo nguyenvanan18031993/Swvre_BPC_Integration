@@ -1,4 +1,3 @@
-import 'package:bpc_swvre/models/UserModel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -8,19 +7,17 @@ import 'bpc_swvre_platform_interface.dart';
 class MethodChannelBpcSwvre extends BpcSwvrePlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('bpc_swvre');
+  final methodChannel = const MethodChannel('com.example.app/bpc_swrve');
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
 
   @override
   Future<String?> connectSwvreSDK() async {
-    final connectStatus =
-        await methodChannel.invokeMethod<String>('connectSwvreSDK');
+    final connectStatus = await methodChannel.invokeMethod<String>('connectSwvreSDK');
     return connectStatus;
   }
 
@@ -36,44 +33,41 @@ class MethodChannelBpcSwvre extends BpcSwvrePlatform {
   }
 
   @override
-  Future<String?> sendEvent(String event, Map<String, dynamic>? payload) async {
+  Future<String?> event(String event_name, Map? payload) async {
     try {
       if (payload != null) {
         final result =
-            await methodChannel.invokeMethod("sendEvent", <String, dynamic>{
-          'payload': payload,
-          'event': event,
-        });
+            await methodChannel.invokeMethod("event", {'name': event_name, 'payload': payload});
         return result;
       }
       final result =
-          await methodChannel.invokeMethod("sendEvent", <String, dynamic>{
-        'event': event,
-      });
+          await methodChannel.invokeMethod("event", {'name': event_name, 'payload': payload});
       return result;
     } on PlatformException catch (e) {
-      throw ArgumentError('Unable to sendEvent ${e.code}');
+      throw ArgumentError('Unable to event ${e.code}');
     }
   }
 
   @override
-  Future<String?> customeUserProperties(UserModel userModel) async {
+  Future<String?> setSwrveProperties(Map? properties) async {
     try {
-      final result = await methodChannel
-          .invokeMethod("customeUserProperties", <String, dynamic>{
-        'first_name': userModel.first_name,
-        'last_name': userModel.last_name,
-        'balance': userModel.balance,
-        'profile_status': userModel.profile_status,
-        'language': userModel.language,
-        'wallet_size': userModel.wallet_size,
-        'phone_number': userModel.phone_number,
-        'remittance_opt_in': userModel.remittance_opt_in,
-      });
+      final result =
+          await methodChannel.invokeMethod("setSwrveProperties", {'properties': properties});
       print(result);
       return result;
     } on PlatformException catch (e) {
-      throw ArgumentError('Unable to customeUserProperties ${e.message}');
+      throw ArgumentError('Unable to setSwrveProperties ${e.message}');
+    }
+  }
+
+  @override
+  Future<String?> identifySwrveUser(String external_id) async {
+    try {
+      final result = await methodChannel.invokeMethod("identify", {'external_id': external_id});
+      print(result);
+      return result;
+    } on PlatformException catch (e) {
+      throw ArgumentError('Unable to identifySwrveUser ${e.message}');
     }
   }
 }

@@ -1,4 +1,3 @@
-import 'package:bpc_swvre/models/UserModel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'bpc_swvre_method_channel.dart';
@@ -36,11 +35,15 @@ abstract class BpcSwvrePlatform extends PlatformInterface {
     throw UnimplementedError();
   }
 
-  Future<String?> sendEvent(String event, Map<String, dynamic>? payload) {
+  Future<String?> event(String event_name, Map? payload) {
     throw UnimplementedError();
   }
 
-  Future<String?> customeUserProperties(UserModel userModel) {
+  Future<String?> setSwrveProperties(Map properties) {
+    throw UnimplementedError();
+  }
+
+  Future<String?> identifySwrveUser(String external_id) {
     throw UnimplementedError();
   }
 }

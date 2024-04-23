@@ -1,4 +1,3 @@
-import 'package:bpc_swvre/models/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -65,88 +64,99 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  connectSwvre();
+              const SizedBox(
+                height: 30,
+              ),
+              TextFormField(
+                controller: _evenController,
+                decoration: const InputDecoration(
+                  hintText: 'Enter the event',
+                  labelText: 'Event *',
+                ),
+                onChanged: (value) {
+                  setState(() {});
                 },
-                child: Text(_connectStatus),
+                onSaved: (String? value) {},
+                validator: (String? value) {
+                  return (value != null) ? 'Please enter event.' : null;
+                },
+              ),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: _evenController.text != ''
+                        ? () async {
+                            try {
+                              final result =
+                                  await _bpcSwvrePlugin.event(_evenController.text, null);
+                              print(result);
+                              _evenController.text = '';
+                              setState(() {});
+                            } on PlatformException {
+                              print('Failed to embed sdk.');
+                            }
+                          }
+                        : null,
+                    child: Text("Send Event"),
+                  ),
+                  ElevatedButton(
+                    onPressed: _evenController.text != ''
+                        ? () async {
+                            try {
+                              final result = await _bpcSwvrePlugin.event(
+                                  _evenController.text, {'key1': "value1", 'key2': "value2"});
+                              print(result);
+                              _evenController.text = '';
+                              setState(() {});
+                            } on PlatformException {
+                              print('Failed to embed sdk.');
+                            }
+                          }
+                        : null,
+                    child: Text("Send Event With Payload"),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 30,
               ),
-              _connect
-                  ? TextFormField(
-                      controller: _evenController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter the event',
-                        labelText: 'Event *',
-                      ),
-                      onChanged: (value) {
-                        setState(() {});
-                      },
-                      onSaved: (String? value) {},
-                      validator: (String? value) {
-                        return (value != null) ? 'Please enter event.' : null;
-                      },
-                    )
-                  : const SizedBox.shrink(),
-              _connect
-                  ? Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: _evenController.text != ''
-                              ? () async {
-                                  try {
-                                    final result =
-                                        await _bpcSwvrePlugin.sendEvent(_evenController.text, null);
-                                    print(result);
-                                    _evenController.text = '';
-                                    setState(() {});
-                                  } on PlatformException {
-                                    print('Failed to embed sdk.');
-                                  }
-                                }
-                              : null,
-                          child: Text("Send Event"),
-                        ),
-                        ElevatedButton(
-                          onPressed: _evenController.text != ''
-                              ? () async {
-                                  try {
-                                    final result = await _bpcSwvrePlugin.sendEvent(
-                                        _evenController.text, {'key1': "value1", 'key2': "value2"});
-                                    print(result);
-                                    _evenController.text = '';
-                                    setState(() {});
-                                  } on PlatformException {
-                                    print('Failed to embed sdk.');
-                                  }
-                                }
-                              : null,
-                          child: Text("Send Event With Payload"),
-                        ),
-                      ],
-                    )
-                  : const SizedBox.shrink(),
-              const SizedBox(
-                height: 30,
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    final userId = await _bpcSwvrePlugin.setSwrveProperties({
+                      "first_name": "aa",
+                      "last_name": "bb",
+                      "balance": 1000,
+                      "plan": "plan",
+                      "profile_status": "active",
+                      "language": "EN",
+                      "wallet_size": "mini",
+                      "phone_number": "0891699999",
+                      "remittance_opt_in": "yes"
+                    });
+                    setState(() {
+                      _setCustomUserProperties = userId ?? "";
+                    });
+                  } on PlatformException {
+                    print('Failed to embed sdk.');
+                  }
+                },
+                child: Text(_setCustomUserProperties),
               ),
-              _connect
-                  ? ElevatedButton(
-                      onPressed: () async {
-                        try {
-                          final userId = await _bpcSwvrePlugin.customeUserProperties(UserModel("aa",
-                              "bb", 1000, "plan", "active", "EN", "mini", "0891699999", "yes"));
-                          setState(() {
-                            _setCustomUserProperties = userId ?? "";
-                          });
-                        } on PlatformException {
-                          print('Failed to embed sdk.');
-                        }
-                      },
-                      child: Text(_setCustomUserProperties),
-                    )
-                  : const SizedBox.shrink(),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    final userId = await _bpcSwvrePlugin
+                        .identifySwrveUser("0471b724-7bc3-49aa-ae2e-9238145257f1");
+                    setState(() {
+                      _setCustomUserProperties = userId ?? "";
+                    });
+                  } on PlatformException {
+                    print('Failed to embed sdk.');
+                  }
+                },
+                child: Text("Update User Id"),
+              ),
             ],
           ),
         ),

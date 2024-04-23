@@ -53,6 +53,10 @@ android {
     }
 }
 
+dependencies {
+    implementation 'com.swrve.sdk.android:swrve:10.11.2'
+}
+
 flutter {
     source '../..'
 }
