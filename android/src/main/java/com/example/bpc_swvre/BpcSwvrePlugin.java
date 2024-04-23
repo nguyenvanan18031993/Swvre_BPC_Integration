@@ -35,7 +35,7 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "bpc_swvre");
+    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "com.example.app/bpc_swvre");
     channel.setMethodCallHandler(this);
     context = flutterPluginBinding.getApplicationContext();
   }
@@ -44,6 +44,10 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     switch (call.method) {
       case "getPlatformVersion":
+        break;
+      case "connectSwvreSDK":
+        break;
+      case "embedCampaignSwvreSDK":
         break;
       case "event":
         swrveEvent(call);

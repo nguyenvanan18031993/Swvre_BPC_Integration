@@ -7,7 +7,7 @@ import 'bpc_swvre_platform_interface.dart';
 class MethodChannelBpcSwvre extends BpcSwvrePlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('bpc_swvre');
+  final methodChannel = const MethodChannel('com.example.app/bpc_swvre');
 
   @override
   Future<String?> getPlatformVersion() async {
@@ -35,11 +35,6 @@ class MethodChannelBpcSwvre extends BpcSwvrePlatform {
   @override
   Future<String?> event(String event_name, Map? payload) async {
     try {
-      if (payload != null) {
-        final result =
-            await methodChannel.invokeMethod("event", {'name': event_name, 'payload': payload});
-        return result;
-      }
       final result =
           await methodChannel.invokeMethod("event", {'name': event_name, 'payload': payload});
       return result;
