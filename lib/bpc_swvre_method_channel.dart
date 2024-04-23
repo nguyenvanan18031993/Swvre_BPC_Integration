@@ -7,7 +7,7 @@ import 'bpc_swvre_platform_interface.dart';
 class MethodChannelBpcSwvre extends BpcSwvrePlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('com.example.app/bpc_swrve');
+  final methodChannel = const MethodChannel('bpc_swvre');
 
   @override
   Future<String?> getPlatformVersion() async {

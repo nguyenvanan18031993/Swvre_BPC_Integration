@@ -20,7 +20,7 @@ void BpcSwvrePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows *registrar) {
   auto channel =
       std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-          registrar->messenger(), "com.example.app/bpc_swrve",
+          registrar->messenger(), "bpc_swvre",
           &flutter::StandardMethodCodec::GetInstance());
 
   auto plugin = std::make_unique<BpcSwvrePlugin>();

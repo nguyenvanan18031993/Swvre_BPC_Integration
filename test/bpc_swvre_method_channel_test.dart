@@ -6,7 +6,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelBpcSwvre platform = MethodChannelBpcSwvre();
-  const MethodChannel channel = MethodChannel('com.example.app/bpc_swrve');
+  const MethodChannel channel = MethodChannel('bpc_swvre');
 
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(

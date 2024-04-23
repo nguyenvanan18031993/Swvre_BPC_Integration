@@ -4,7 +4,7 @@ import SwrveSDK
 
 public class BpcSwvrePlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "com.example.app/bpc_swrve", binaryMessenger: registrar.messenger())
+    let channel = FlutterMethodChannel(name: "bpc_swvre", binaryMessenger: registrar.messenger())
     let instance = BpcSwvrePlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
