@@ -11,23 +11,7 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
-    case "getPlatformVersion":
-      result("iOS " + UIDevice.current.systemVersion)
-    case "connectSwvreSDK":
-    let config = SwrveConfig()
-    // To use the EU stack, include this in your config.
-    config.stack = SWRVE_STACK_EU
-      #if DEBUG
-          SwrveSDK.sharedInstance(withAppID: 7179,
-              apiKey: "general-PNdXX9jQXcSq5Oz1CMag",
-              config: config)
-      #else
-          SwrveSDK.sharedInstance(withAppID: 7179,
-              apiKey: "general-PNdXX9jQXcSq5Oz1CMag",
-              config: config)
-      #endif
-      result("[Swvre DEBUG] Success Connect SDK")
-    case "embedCampaignSwvreSDK":
+      case "embedCampaignSwvreSDK":
         let embeddedConfig = SwrveEmbeddedMessageConfig()
         embeddedConfig.embeddedCallback = { message, personalizationProperties, isControl in
             if isControl {
@@ -55,32 +39,50 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
 
             result("[Swvre DEBUG] complete")
         }
-    case "sendEvent":
+    case "event":
       if let args = call.arguments as? Dictionary<String, Any> {
-        guard let eventName = args["event"] as? String else {
-          result(FlutterError.init(code: "event is null", message: nil, details: nil))
-          return
-        }
-        if let payload = args["payload"] as? Dictionary<String, Any> {
-          // only send event name
-          SwrveSDK.event(eventName, payload: payload)
-          result(payload)
-        } else {
-          // send event name with payload
-          SwrveSDK.event(eventName)
-          result(eventName)
-        }
+          guard let event_name = args["name"] as? String else {
+              result(FlutterError.init(code: "event name is null", message: nil, details: nil))
+              return
+          }
+          if let payload = args["payload"] as? Dictionary<String, Any> {
+              // only send event name
+              // send event name with payload
+              DispatchQueue.main.async {
+                  SwrveSDK.event(event_name, payload: payload)
+                  result(event_name)
+              }
+          } else {
+              // send event name with payload
+              DispatchQueue.main.async {
+                  SwrveSDK.event(event_name)
+                  result(event_name)
+              }
+          }
+        
       } else {
         result(FlutterError.init(code: "bad args", message: nil, details: nil))
       }
-    case "customeUserProperties":
-      if let args = call.arguments as? Dictionary<String, Any> {
-          SwrveSDK.userUpdate(args)
+    case "setSwrveProperties":
+      if let properties = call.arguments as? Dictionary<String, Any> {
+          SwrveSDK.userUpdate(properties)
           if (SwrveSDK.started()) {
             result(SwrveSDK.userID())
           }
         } else {
           result(FlutterError.init(code: "bad args", message: nil, details: nil))
+        }
+      case "identify":
+        if let args = call.arguments as? Dictionary<String, Any> {
+            guard let external_id = args["external_id"] as? String else {
+              result(FlutterError.init(code: "external_id is null", message: nil, details: nil))
+              return
+            }
+            SwrveSDK.identify(external_id, onSuccess: { (status, swrveUserId) in
+                // Success, continue with your logic
+            }) { (httpCode, errorMessage) in
+                // Error should be handled
+            }
         }
     default:
       result(FlutterMethodNotImplemented)
