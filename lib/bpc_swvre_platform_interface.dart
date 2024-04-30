@@ -39,7 +39,7 @@ abstract class BpcSwvrePlatform extends PlatformInterface {
     throw UnimplementedError();
   }
 
-  Future<String?> setSwrveProperties(Map properties) {
+  Future<String?> userUpdate(Map properties) {
     throw UnimplementedError();
   }
 

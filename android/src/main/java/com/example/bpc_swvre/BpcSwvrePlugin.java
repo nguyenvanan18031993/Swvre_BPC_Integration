@@ -43,6 +43,8 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     switch (call.method) {
+      case "connectSwvreSDK":
+        break;
       case "embedCampaignSwvreSDK":
         break;
       case "event":

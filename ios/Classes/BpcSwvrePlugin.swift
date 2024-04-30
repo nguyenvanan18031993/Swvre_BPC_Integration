@@ -11,6 +11,8 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
+      case "connectSwvreSDK":
+        break
       case "embedCampaignSwvreSDK":
         let embeddedConfig = SwrveEmbeddedMessageConfig()
         embeddedConfig.embeddedCallback = { message, personalizationProperties, isControl in
@@ -63,7 +65,7 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
       } else {
         result(FlutterError.init(code: "bad args", message: nil, details: nil))
       }
-    case "setSwrveProperties":
+    case "userUpdate":
       if let properties = call.arguments as? Dictionary<String, Any> {
           SwrveSDK.userUpdate(properties)
           if (SwrveSDK.started()) {

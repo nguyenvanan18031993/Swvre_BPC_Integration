@@ -44,14 +44,13 @@ class MethodChannelBpcSwvre extends BpcSwvrePlatform {
   }
 
   @override
-  Future<String?> setSwrveProperties(Map? properties) async {
+  Future<String?> userUpdate(Map? properties) async {
     try {
-      final result =
-          await methodChannel.invokeMethod("setSwrveProperties", {'properties': properties});
+      final result = await methodChannel.invokeMethod("userUpdate", {'properties': properties});
       print(result);
       return result;
     } on PlatformException catch (e) {
-      throw ArgumentError('Unable to setSwrveProperties ${e.message}');
+      throw ArgumentError('Unable to userUpdate ${e.message}');
     }
   }
 

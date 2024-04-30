@@ -17,8 +17,8 @@ class BpcSwvre {
     return BpcSwvrePlatform.instance.event(event, payload);
   }
 
-  Future<String?> setSwrveProperties(Map properties) {
-    return BpcSwvrePlatform.instance.setSwrveProperties(properties);
+  Future<String?> userUpdate(Map properties) {
+    return BpcSwvrePlatform.instance.userUpdate(properties);
   }
 
   Future<String?> identifySwrveUser(String external_id) {

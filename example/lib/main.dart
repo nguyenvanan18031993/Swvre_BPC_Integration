@@ -123,7 +123,7 @@ class _MyAppState extends State<MyApp> {
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    final userId = await _bpcSwvrePlugin.setSwrveProperties({
+                    final userId = await _bpcSwvrePlugin.userUpdate({
                       "first_name": "aa",
                       "last_name": "bb",
                       "balance": 1000,
