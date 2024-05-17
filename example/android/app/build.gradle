@@ -54,7 +54,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.swrve.sdk.android:swrve:10.11.2'
+    implementation 'com.swrve.sdk.android:swrve-firebase:10.14.0'
 }
 
 flutter {
