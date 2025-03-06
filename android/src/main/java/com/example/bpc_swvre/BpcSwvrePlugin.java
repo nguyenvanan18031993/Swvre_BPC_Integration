@@ -3,13 +3,14 @@ package com.example.bpc_swvre;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.swrve.sdk.SwrveIdentityResponse;
 import com.swrve.sdk.SwrveSDK;
 import com.swrve.sdk.config.SwrveConfig;
+import com.swrve.sdk.config.SwrveEmbeddedMessageConfig;
 import com.swrve.sdk.config.SwrveStack;
 import com.swrve.sdk.messaging.SwrveEmbeddedListener;
 
@@ -33,6 +34,16 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
   private Context context;
   private Activity activity;
 
+  private static final int MyCashAPP_ID_DEBUG = 6961;
+  private static final String MyCashAPI_KEY_DEBUG = "NMc1MibonVbzj5X6zPU";
+  private static final int MyCashAPP_ID_RELEASE = 6913;
+  private static final String MyCashAPI_KEY_RELEASE = "5AvfpRGxO0x1z3c67X";
+
+  private static final int DigiCelAPP_ID_DEBUG = 6974;
+  private static final String DigiCelAPI_KEY_DEBUG = "DZqhrkzFOqEo9eReySOl";
+  private static final int DigiCelAPP_ID_RELEASE = 6919;
+  private static final String DigiCelAPI_KEY_RELEASE = "AzbWsTYTXIE1BfJlAG4";
+
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "com.example.app/bpc_swvre");
@@ -44,6 +55,38 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     switch (call.method) {
       case "connectSwvreSDK":
+        try {
+          SwrveConfig config = new SwrveConfig();
+          // To use the EU stack, include this in your config.
+          config.setSelectedStack(SwrveStack.EU);
+          String packageName = activity.getPackageName();
+          SwrveEmbeddedListener embeddedListener = (context, message, personalizationProperties, isControl) -> {
+            System.out.println(message.getData());
+          };
+          SwrveEmbeddedMessageConfig embeddedMessageConfig = new SwrveEmbeddedMessageConfig.Builder()
+                  .embeddedListener(embeddedListener)
+                  .build();
+          config.setEmbeddedMessageConfig(embeddedMessageConfig);
+          switch (packageName) {
+            case "com.digicelfs.mycash":
+              SwrveSDK.createInstance(activity.getApplication(), MyCashAPP_ID_RELEASE, MyCashAPI_KEY_RELEASE, config);
+              break;
+            case "com.digicelfs.mycashuat":
+              SwrveSDK.createInstance(activity.getApplication(), MyCashAPP_ID_DEBUG, MyCashAPI_KEY_DEBUG, config);
+              break;
+            case "com.digicelfs.cellmoni":
+              SwrveSDK.createInstance(activity.getApplication(), DigiCelAPP_ID_RELEASE, DigiCelAPI_KEY_RELEASE, config);
+              break;
+            case "com.digicelfs.cellmoniuat":
+              SwrveSDK.createInstance(activity.getApplication(), DigiCelAPP_ID_DEBUG, DigiCelAPI_KEY_DEBUG, config);
+              break;
+            default:
+              System.out.println("BundleId error");
+              break;
+          }
+        } catch (IllegalArgumentException exp) {
+          Log.e("SwrveDemo", "Could not initialize the Swrve SDK", exp);
+        }
         break;
       case "embedCampaignSwvreSDK":
         break;
