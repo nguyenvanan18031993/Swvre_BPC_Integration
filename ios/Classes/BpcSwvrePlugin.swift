@@ -1,8 +1,25 @@
 import Flutter
 import UIKit
 import SwrveSDK
+import SwrveSDKCommon
 
 public class BpcSwvrePlugin: NSObject, FlutterPlugin {
+
+    let NotificationCategoryIdentifier = "com.swrve.sampleAppButtons"
+    let NotificationActionOneIdentifier = "ACTION1"
+    let NotificationActionTwoIdentifier = "ACTION2"
+    
+    let MyCashAPP_ID_DEBUG = 6961
+    let MyCashAPI_KEY_DEBUG = "NMc1MibonVbzj5X6zPU"
+    let MyCashAPP_ID_RELEASE = 6913
+    let MyCashAPI_KEY_RELEASE = "5AvfpRGxO0x1z3c67X"
+    
+    let DigiCelAPP_ID_DEBUG = 6974
+    let DigiCelAPI_KEY_DEBUG = "DZqhrkzFOqEo9eReySOl"
+    let DigiCelAPP_ID_RELEASE = 6919
+    let DigiCelAPI_KEY_RELEASE = "AzbWsTYTXIE1BfJlAG4"
+
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "com.example.app/bpc_swvre", binaryMessenger: registrar.messenger())
     let instance = BpcSwvrePlugin()
@@ -12,6 +29,33 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
       case "connectSwvreSDK":
+      let config = SwrveConfig()
+        // To use the EU stack, include this in your config.
+        config.stack = SWRVE_STACK_EU
+        // Set the response delegate before Swrve is initialized
+        config.pushResponseDelegate = self
+        config.pushEnabled = true
+        config.pushNotificationPermissionEvents = Set(["tutorial.complete", "subscribe"])
+        switch Bundle.main.bundleIdentifier {
+        case "com.digicelfs.mycash":
+            SwrveSDK.sharedInstance(withAppID: Int32(MyCashAPP_ID_RELEASE),
+                                    apiKey: MyCashAPI_KEY_RELEASE,
+                                    config: config)
+        case "com.digicelfs.mycashuat":
+            SwrveSDK.sharedInstance(withAppID: Int32(MyCashAPP_ID_DEBUG),
+                                    apiKey: MyCashAPI_KEY_DEBUG,
+                                    config: config)
+        case "com.digicelfs.cellmoni":
+            SwrveSDK.sharedInstance(withAppID: Int32(DigiCelAPP_ID_RELEASE),
+                                    apiKey: DigiCelAPI_KEY_RELEASE,
+                                    config: config)
+        case "com.digicelfs.cellmoniuat":
+            SwrveSDK.sharedInstance(withAppID: Int32(DigiCelAPP_ID_DEBUG),
+                                    apiKey: DigiCelAPI_KEY_DEBUG,
+                                    config: config)
+        default:
+            print("BundleId is wrong!!!")
+        }
         break
       case "embedCampaignSwvreSDK":
         let embeddedConfig = SwrveEmbeddedMessageConfig()
