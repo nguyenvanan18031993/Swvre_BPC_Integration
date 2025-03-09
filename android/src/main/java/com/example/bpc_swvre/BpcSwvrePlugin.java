@@ -59,33 +59,45 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
           SwrveConfig config = new SwrveConfig();
           // To use the EU stack, include this in your config.
           config.setSelectedStack(SwrveStack.EU);
-          String packageName = activity.getPackageName();
           SwrveEmbeddedListener embeddedListener = (context, message, personalizationProperties, isControl) -> {
             System.out.println(message.getData());
           };
           SwrveEmbeddedMessageConfig embeddedMessageConfig = new SwrveEmbeddedMessageConfig.Builder()
-                  .embeddedListener(embeddedListener)
-                  .build();
+              .embeddedListener(embeddedListener)
+              .build();
           config.setEmbeddedMessageConfig(embeddedMessageConfig);
-          switch (packageName) {
-            case "com.digicelfs.mycash":
-              SwrveSDK.createInstance(activity.getApplication(), MyCashAPP_ID_RELEASE, MyCashAPI_KEY_RELEASE, config);
-              break;
-            case "com.digicelfs.mycashuat":
-              SwrveSDK.createInstance(activity.getApplication(), MyCashAPP_ID_DEBUG, MyCashAPI_KEY_DEBUG, config);
-              break;
-            case "com.digicelfs.cellmoni":
-              SwrveSDK.createInstance(activity.getApplication(), DigiCelAPP_ID_RELEASE, DigiCelAPI_KEY_RELEASE, config);
-              break;
-            case "com.digicelfs.cellmoniuat":
-              SwrveSDK.createInstance(activity.getApplication(), DigiCelAPP_ID_DEBUG, DigiCelAPI_KEY_DEBUG, config);
-              break;
-            default:
-              System.out.println("BundleId error");
-              break;
-          }
+          SwrveSDK.createInstance(activity.getApplication(), call.argument("swrveAPPID"), call.argument("swrveAPIKey"),
+              config);
+          result.success("Connect successfully");
+          // switch (packageName) {
+          // case "com.digicelfs.mycash":
+          // SwrveSDK.createInstance(activity.getApplication(), MyCashAPP_ID_RELEASE,
+          // MyCashAPI_KEY_RELEASE, config);
+          // result.success("Connect successfully");
+          // break;
+          // case "com.digicelfs.mycashuat":
+          // SwrveSDK.createInstance(activity.getApplication(), MyCashAPP_ID_DEBUG,
+          // MyCashAPI_KEY_DEBUG, config);
+          // result.success("Connect successfully");
+          // break;
+          // case "com.digicelfs.cellmoni":
+          // SwrveSDK.createInstance(activity.getApplication(), DigiCelAPP_ID_RELEASE,
+          // DigiCelAPI_KEY_RELEASE, config);
+          // result.success("Connect successfully");
+          // break;
+          // case "com.digicelfs.cellmoniuat":
+          // SwrveSDK.createInstance(activity.getApplication(), DigiCelAPP_ID_DEBUG,
+          // DigiCelAPI_KEY_DEBUG, config);
+          // result.success("Connect successfully");
+          // break;
+          // default:
+          // System.out.println("BundleId error");
+          // result.success("BundleId error");
+          // break;
+          // }
         } catch (IllegalArgumentException exp) {
           Log.e("SwrveDemo", "Could not initialize the Swrve SDK", exp);
+          result.success("Could not initialize the Swrve SDK");
         }
         break;
       case "embedCampaignSwvreSDK":

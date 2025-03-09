@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _connectStatus = 'Connect';
+  String _connectStatus = '';
   String _setCustomUserProperties = 'Custom User Properties';
   bool _connect = false;
   final _bpcSwvrePlugin = BpcSwvre();
@@ -25,13 +25,15 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    connectSwvre();
   }
 
   Future<void> connectSwvre() async {
     String connectStatus;
     try {
-      connectStatus = await _bpcSwvrePlugin.connectSwvreSDK() ?? 'Connect';
+      connectStatus = await _bpcSwvrePlugin.connectSwvreSDK() ?? '';
       _connect = !_connect;
+      embedSwvre();
     } on PlatformException {
       connectStatus = 'Failed to connect sdk.';
     }

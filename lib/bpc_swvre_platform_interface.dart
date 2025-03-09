@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'bpc_swvre_method_channel.dart';
@@ -27,7 +29,7 @@ abstract class BpcSwvrePlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<String?> connectSwvreSDK() {
+  Future<String?> connectSwvreSDK(int swrveAPPID, String swrveAPIKey) {
     throw UnsupportedError('connectSwvreSDK() has not been implemented.');
   }
 

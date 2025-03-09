@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'bpc_swvre_platform_interface.dart';
 
 class BpcSwvre {
@@ -5,8 +7,8 @@ class BpcSwvre {
     return BpcSwvrePlatform.instance.getPlatformVersion();
   }
 
-  Future<String?> connectSwvreSDK() {
-    return BpcSwvrePlatform.instance.connectSwvreSDK();
+  Future<String?> connectSwvreSDK(int swrveAPPID, String swrveAPIKey) {
+    return BpcSwvrePlatform.instance.connectSwvreSDK(swrveAPPID, swrveAPIKey);
   }
 
   Future<String?> embedCampaignSwvreSDK() {

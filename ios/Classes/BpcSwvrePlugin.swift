@@ -36,26 +36,39 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
         config.pushResponseDelegate = self
         config.pushEnabled = true
         config.pushNotificationPermissionEvents = Set(["tutorial.complete", "subscribe"])
-        switch Bundle.main.bundleIdentifier {
-        case "com.digicelfs.mycash":
-            SwrveSDK.sharedInstance(withAppID: Int32(MyCashAPP_ID_RELEASE),
-                                    apiKey: MyCashAPI_KEY_RELEASE,
+        if let args = call.arguments as? Dictionary<String, Any> {
+          guard let swrveAPPID = args["swrveAPPID"] as? Int else {
+              result(FlutterError.init(code: "swrveAPPID is null", message: nil, details: nil))
+              return
+          }
+          guard let swrveAPIKey = args["swrveAPIKey"] as? String else {
+              result(FlutterError.init(code: "swrveAPIKey is null", message: nil, details: nil))
+              return
+          }
+          SwrveSDK.sharedInstance(withAppID: Int32(swrveAPPID),
+                                    apiKey: swrveAPIKey,
                                     config: config)
-        case "com.digicelfs.mycashuat":
-            SwrveSDK.sharedInstance(withAppID: Int32(MyCashAPP_ID_DEBUG),
-                                    apiKey: MyCashAPI_KEY_DEBUG,
-                                    config: config)
-        case "com.digicelfs.cellmoni":
-            SwrveSDK.sharedInstance(withAppID: Int32(DigiCelAPP_ID_RELEASE),
-                                    apiKey: DigiCelAPI_KEY_RELEASE,
-                                    config: config)
-        case "com.digicelfs.cellmoniuat":
-            SwrveSDK.sharedInstance(withAppID: Int32(DigiCelAPP_ID_DEBUG),
-                                    apiKey: DigiCelAPI_KEY_DEBUG,
-                                    config: config)
-        default:
-            print("BundleId is wrong!!!")
         }
+        // switch Bundle.main.bundleIdentifier {
+        // case "com.digicelfs.mycash":
+        //     SwrveSDK.sharedInstance(withAppID: Int32(MyCashAPP_ID_RELEASE),
+        //                             apiKey: MyCashAPI_KEY_RELEASE,
+        //                             config: config)
+        // case "com.digicelfs.mycashuat":
+        //     SwrveSDK.sharedInstance(withAppID: Int32(MyCashAPP_ID_DEBUG),
+        //                             apiKey: MyCashAPI_KEY_DEBUG,
+        //                             config: config)
+        // case "com.digicelfs.cellmoni":
+        //     SwrveSDK.sharedInstance(withAppID: Int32(DigiCelAPP_ID_RELEASE),
+        //                             apiKey: DigiCelAPI_KEY_RELEASE,
+        //                             config: config)
+        // case "com.digicelfs.cellmoniuat":
+        //     SwrveSDK.sharedInstance(withAppID: Int32(DigiCelAPP_ID_DEBUG),
+        //                             apiKey: DigiCelAPI_KEY_DEBUG,
+        //                             config: config)
+        // default:
+        //     print("BundleId is wrong!!!")
+        // }
         break
       case "embedCampaignSwvreSDK":
         let embeddedConfig = SwrveEmbeddedMessageConfig()
@@ -134,4 +147,21 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
       result(FlutterMethodNotImplemented)
     }
   }
+}
+
+//MARK: SwrvePushResponseDelegate implementation
+
+extension BpcSwvrePlugin:  SwrvePushResponseDelegate {
+    @available(iOS 10.0, *)
+    public func didReceive(_ response: UNNotificationResponse, withCompletionHandler completionHandler: (() -> Void)) {
+        print("Got iOS 10 Notification with Identifier - \(response.actionIdentifier)")
+        // Include your own code in here
+        completionHandler()
+    }
+    
+    @available(iOS 10.0, *)
+    public func willPresent(_ notification: UNNotification, withCompletionHandler completionHandler: ((UNNotificationPresentationOptions) -> Void)) {
+        // Include your own code in here
+        completionHandler([])
+    }
 }
