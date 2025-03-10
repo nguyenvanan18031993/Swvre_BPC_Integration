@@ -8,17 +8,6 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
     let NotificationCategoryIdentifier = "com.swrve.sampleAppButtons"
     let NotificationActionOneIdentifier = "ACTION1"
     let NotificationActionTwoIdentifier = "ACTION2"
-    
-    let MyCashAPP_ID_DEBUG = 6961
-    let MyCashAPI_KEY_DEBUG = "NMc1MibonVbzj5X6zPU"
-    let MyCashAPP_ID_RELEASE = 6913
-    let MyCashAPI_KEY_RELEASE = "5AvfpRGxO0x1z3c67X"
-    
-    let DigiCelAPP_ID_DEBUG = 6974
-    let DigiCelAPI_KEY_DEBUG = "DZqhrkzFOqEo9eReySOl"
-    let DigiCelAPP_ID_RELEASE = 6919
-    let DigiCelAPI_KEY_RELEASE = "AzbWsTYTXIE1BfJlAG4"
-
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "com.example.app/bpc_swvre", binaryMessenger: registrar.messenger())
@@ -47,28 +36,11 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
           }
           SwrveSDK.sharedInstance(withAppID: Int32(swrveAPPID),
                                     apiKey: swrveAPIKey,
-                                    config: config)
+                                    config: config)   
+          result("[Swvre DEBUG] connectSwvreSDK complete")
+        } else {
+          result(FlutterError.init(code: "bad args", message: nil, details: nil))
         }
-        // switch Bundle.main.bundleIdentifier {
-        // case "com.digicelfs.mycash":
-        //     SwrveSDK.sharedInstance(withAppID: Int32(MyCashAPP_ID_RELEASE),
-        //                             apiKey: MyCashAPI_KEY_RELEASE,
-        //                             config: config)
-        // case "com.digicelfs.mycashuat":
-        //     SwrveSDK.sharedInstance(withAppID: Int32(MyCashAPP_ID_DEBUG),
-        //                             apiKey: MyCashAPI_KEY_DEBUG,
-        //                             config: config)
-        // case "com.digicelfs.cellmoni":
-        //     SwrveSDK.sharedInstance(withAppID: Int32(DigiCelAPP_ID_RELEASE),
-        //                             apiKey: DigiCelAPI_KEY_RELEASE,
-        //                             config: config)
-        // case "com.digicelfs.cellmoniuat":
-        //     SwrveSDK.sharedInstance(withAppID: Int32(DigiCelAPP_ID_DEBUG),
-        //                             apiKey: DigiCelAPI_KEY_DEBUG,
-        //                             config: config)
-        // default:
-        //     print("BundleId is wrong!!!")
-        // }
         break
       case "embedCampaignSwvreSDK":
         let embeddedConfig = SwrveEmbeddedMessageConfig()

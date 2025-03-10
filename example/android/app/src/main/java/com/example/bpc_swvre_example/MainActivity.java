@@ -19,15 +19,6 @@ public class MainActivity extends FlutterActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sInstance = this;
-
-        try {
-            SwrveConfig config = new SwrveConfig();
-            // To use the EU stack, include this in your config.
-             config.setSelectedStack(SwrveStack.EU);
-            SwrveSDK.createInstance(getApplication(), 6974, "DZqhrkzFOqEo9eReySOl", config);
-        } catch (IllegalArgumentException exp) {
-            Log.e("SwrveDemo", "Could not initialize the Swrve SDK", exp);
-        }
     }
 
     public static MainActivity getInstance() {

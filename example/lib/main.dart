@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> connectSwvre() async {
     String connectStatus;
     try {
-      connectStatus = await _bpcSwvrePlugin.connectSwvreSDK() ?? '';
+      connectStatus = await _bpcSwvrePlugin.connectSwvreSDK(0, "") ?? '';
       _connect = !_connect;
       embedSwvre();
     } on PlatformException {

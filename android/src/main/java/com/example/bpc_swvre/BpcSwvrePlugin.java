@@ -34,16 +34,6 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
   private Context context;
   private Activity activity;
 
-  private static final int MyCashAPP_ID_DEBUG = 6961;
-  private static final String MyCashAPI_KEY_DEBUG = "NMc1MibonVbzj5X6zPU";
-  private static final int MyCashAPP_ID_RELEASE = 6913;
-  private static final String MyCashAPI_KEY_RELEASE = "5AvfpRGxO0x1z3c67X";
-
-  private static final int DigiCelAPP_ID_DEBUG = 6974;
-  private static final String DigiCelAPI_KEY_DEBUG = "DZqhrkzFOqEo9eReySOl";
-  private static final int DigiCelAPP_ID_RELEASE = 6919;
-  private static final String DigiCelAPI_KEY_RELEASE = "AzbWsTYTXIE1BfJlAG4";
-
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "com.example.app/bpc_swvre");
@@ -69,32 +59,6 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
           SwrveSDK.createInstance(activity.getApplication(), call.argument("swrveAPPID"), call.argument("swrveAPIKey"),
               config);
           result.success("Connect successfully");
-          // switch (packageName) {
-          // case "com.digicelfs.mycash":
-          // SwrveSDK.createInstance(activity.getApplication(), MyCashAPP_ID_RELEASE,
-          // MyCashAPI_KEY_RELEASE, config);
-          // result.success("Connect successfully");
-          // break;
-          // case "com.digicelfs.mycashuat":
-          // SwrveSDK.createInstance(activity.getApplication(), MyCashAPP_ID_DEBUG,
-          // MyCashAPI_KEY_DEBUG, config);
-          // result.success("Connect successfully");
-          // break;
-          // case "com.digicelfs.cellmoni":
-          // SwrveSDK.createInstance(activity.getApplication(), DigiCelAPP_ID_RELEASE,
-          // DigiCelAPI_KEY_RELEASE, config);
-          // result.success("Connect successfully");
-          // break;
-          // case "com.digicelfs.cellmoniuat":
-          // SwrveSDK.createInstance(activity.getApplication(), DigiCelAPP_ID_DEBUG,
-          // DigiCelAPI_KEY_DEBUG, config);
-          // result.success("Connect successfully");
-          // break;
-          // default:
-          // System.out.println("BundleId error");
-          // result.success("BundleId error");
-          // break;
-          // }
         } catch (IllegalArgumentException exp) {
           Log.e("SwrveDemo", "Could not initialize the Swrve SDK", exp);
           result.success("Could not initialize the Swrve SDK");

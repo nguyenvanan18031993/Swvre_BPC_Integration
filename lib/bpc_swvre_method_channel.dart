@@ -16,8 +16,8 @@ class MethodChannelBpcSwvre extends BpcSwvrePlatform {
   }
 
   @override
-  Future<String?> connectSwvreSDK(int swrveAPPID, swrveAPIKey) async {
-    final connectStatus = await methodChannel.invokeMethod<String>('connectSwvreSDK');
+  Future<String?> connectSwvreSDK(int swrveAPPID, String swrveAPIKey) async {
+    final connectStatus = await methodChannel.invokeMethod<String>('connectSwvreSDK', {'swrveAPPID': swrveAPPID, 'swrveAPIKey': swrveAPIKey});
     return connectStatus;
   }
 

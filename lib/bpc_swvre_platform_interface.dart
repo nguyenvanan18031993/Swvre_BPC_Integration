@@ -29,7 +29,7 @@ abstract class BpcSwvrePlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<String?> connectSwvreSDK(int swrveAPPID, String swrveAPIKey) {
+  Future<String?> connectSwvreSDK(int swrveAPPID,String swrveAPIKey) {
     throw UnsupportedError('connectSwvreSDK() has not been implemented.');
   }
 
