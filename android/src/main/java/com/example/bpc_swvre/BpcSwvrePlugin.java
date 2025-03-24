@@ -20,6 +20,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import com.swrve.sdk.SwrvePushServiceDefault;
 
 /** BpcSwvrePlugin */
 public class BpcSwvrePlugin extends Application implements FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -55,6 +56,9 @@ public class BpcSwvrePlugin extends Application implements FlutterPlugin, Method
         break;
       case "identify":
         swrveIdentify(call);
+        break;
+      case "refreshTokenSwrve":
+        com.swrve.sdk.SwrveSDK.setRegistrationId(call.argument("token"));
         break;
       default:
         result.notImplemented();

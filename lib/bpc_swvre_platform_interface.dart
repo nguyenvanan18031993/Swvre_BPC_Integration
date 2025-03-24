@@ -46,4 +46,8 @@ abstract class BpcSwvrePlatform extends PlatformInterface {
   Future<String?> identifySwrveUser(String external_id) {
     throw UnimplementedError();
   }
+
+  Future<String?> refreshTokenSwrve(String token) {
+    throw UnimplementedError();
+  }
 }

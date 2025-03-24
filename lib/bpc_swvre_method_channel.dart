@@ -64,4 +64,15 @@ class MethodChannelBpcSwvre extends BpcSwvrePlatform {
       throw ArgumentError('Unable to identifySwrveUser ${e.message}');
     }
   }
+
+  @override
+  Future<String?> refreshTokenSwrve(String token) async {
+    try {
+      final result = await methodChannel.invokeMethod("refreshTokenSwrve", {'token': token});
+      print(result);
+      return result;
+    } on PlatformException catch (e) {
+      throw ArgumentError('Unable to refreshTokenSwrve ${e.message}');
+    }
+  }
 }

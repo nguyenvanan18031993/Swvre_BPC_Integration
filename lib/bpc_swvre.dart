@@ -24,4 +24,8 @@ class BpcSwvre {
   Future<String?> identifySwrveUser(String external_id) {
     return BpcSwvrePlatform.instance.identifySwrveUser(external_id);
   }
+
+  Future<String?> refreshTokenSwrve(String token) {
+    return BpcSwvrePlatform.instance.refreshTokenSwrve(token);
+  }
 }
