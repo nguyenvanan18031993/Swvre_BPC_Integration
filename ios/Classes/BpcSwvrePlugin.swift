@@ -86,6 +86,14 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
                 // Error should be handled
             }
         }
+      case "refreshTokenSwrve":
+        if let args = call.arguments as? Dictionary<String, Any> {
+            guard let token = args["token"] as? String else {
+              result(FlutterError.init(code: "token is null", message: nil, details: nil))
+              return
+            }
+        }
+        break
     default:
       result(FlutterMethodNotImplemented)
     }
