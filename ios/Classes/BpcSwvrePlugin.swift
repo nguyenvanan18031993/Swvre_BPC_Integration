@@ -1,10 +1,11 @@
 import Flutter
-import UIKit
 import SwrveSDK
+import UIKit
 
 public class BpcSwvrePlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "com.example.app/bpc_swvre", binaryMessenger: registrar.messenger())
+    let channel = FlutterMethodChannel(
+      name: "com.example.app/bpc_swvre", binaryMessenger: registrar.messenger())
     let instance = BpcSwvrePlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
@@ -66,10 +67,12 @@ public class BpcSwvrePlugin: NSObject, FlutterPlugin {
         result(FlutterError.init(code: "bad args", message: nil, details: nil))
       }
     case "userUpdate":
-      if let properties = call.arguments as? Dictionary<String, Any> {
-          SwrveSDK.userUpdate(properties)
-          if (SwrveSDK.started()) {
-            result(SwrveSDK.userID())
+      if let args = call.arguments as? [String: Any] {
+          if let payload = args["properties"] as? Dictionary<String, Any> {
+              SwrveSDK.userUpdate(payload)
+              if SwrveSDK.started() {
+                  result(SwrveSDK.userID())
+              }
           }
         } else {
           result(FlutterError.init(code: "bad args", message: nil, details: nil))
